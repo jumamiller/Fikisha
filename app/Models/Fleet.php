@@ -8,4 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Fleet extends Model
 {
     use HasFactory;
+    protected $fillable=[
+        'registration_number',
+        'status',
+    ];
+    public function order()
+    {
+        return $this->hasMany(Order::class);
+    }
 }
