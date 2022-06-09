@@ -2,7 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
+use \App\Http\Controllers\API\Fleet\FleetController;
+use \App\Http\Controllers\API\Customer\CustomerController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -14,6 +15,5 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::apiResource('fleet', FleetController::class);
+Route::apiResource('customers', CustomerController::class);
