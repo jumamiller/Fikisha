@@ -15,6 +15,8 @@ return new class extends Migration
     {
         Schema::create('fleets', function (Blueprint $table) {
             $table->id();
+            $table->string('registration_number');
+            $table->enum('status',['Available','Loading','On Transit']);
             $table->timestamps();
         });
     }
