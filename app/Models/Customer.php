@@ -13,7 +13,7 @@ class Customer extends Model
         'email',
         'phone',
     ];
-    public function order()
+    public function orders()
     {
         return $this->hasMany(Order::class);
     }
