@@ -21,6 +21,9 @@ Route::group(['prefix'=>'v1'], function(){
         Route::post('login', [AuthController::class,'login']);
         Route::post('register', [AuthController::class,'register']);
     });
-    Route::apiResource('fleet', FleetController::class);
-    Route::apiResource('customers', CustomerController::class);
+    Route::group(['middleware'=>'auth:api'], function(){
+        Route::post('logout', [AuthController::class,'logout']);
+        Route::apiResource('fleet', FleetController::class);
+        Route::apiResource('customers', CustomerController::class);
+    });
 });

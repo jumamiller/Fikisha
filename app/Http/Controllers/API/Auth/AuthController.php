@@ -12,6 +12,10 @@ use PHPUnit\Exception;
 
 class AuthController extends Controller
 {
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function register(Request $request)
     {
         try{
@@ -43,6 +47,11 @@ class AuthController extends Controller
                 ->json(['message'=>$exception->getMessage()],$exception->getCode());
         }
     }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function login(Request $request)
     {
         try {
@@ -73,6 +82,22 @@ class AuthController extends Controller
                     'token'     => Auth::user()->createToken('Fikisha')->accessToken
                 ],200);
 
+        } catch (Exception $exception) {
+            return response()
+                ->json(['message'=>$exception->getMessage()],$exception->getCode());
+        }
+    }
+
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function logout(Request $request)
+    {
+        try {
+            $token = Auth::user()->token();
+            $token->revoke();
+            return response()
+                ->json(['message'=>'You have been successfully logged out!'],200);
         } catch (Exception $exception) {
             return response()
                 ->json(['message'=>$exception->getMessage()],$exception->getCode());
