@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -10,15 +11,15 @@ use Illuminate\Notifications\Notification;
 class OrderDispatchedNotification extends Notification
 {
     use Queueable;
-
+    public $user;
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(User $user)
     {
-        //
+        $this->user=$user;
     }
 
     /**
@@ -40,9 +41,10 @@ class OrderDispatchedNotification extends Notification
      */
     public function toMail($notifiable)
     {
+        $user=$this->user->name;
         return (new MailMessage)
-                    ->subject('Order Dispatched')
-                    ->line('Hi, your order has been dispatched!');
+                    ->subject("Order Dispatched")
+                    ->line("Hi $user, your order has been dispatched!");
     }
 
     /**

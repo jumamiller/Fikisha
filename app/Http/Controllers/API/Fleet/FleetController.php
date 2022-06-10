@@ -4,6 +4,9 @@ namespace App\Http\Controllers\API\Fleet;
 
 use App\Http\Controllers\Controller;
 use App\Models\Fleet;
+use App\Models\Order;
+use App\Models\User;
+use App\Notifications\OrderDispatchedNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Mockery\Exception;
@@ -132,6 +135,66 @@ class FleetController extends Controller
         } catch (Exception $exception) {
             return response()
                 ->json(['message'=>$exception->getMessage()], $exception->getCode());
+        }
+    }
+    public function loading(Request $request)
+    {
+        try{
+            $validator=Validator::make($request->all(),[
+                'order_number' =>'required',
+                'fleet_id' =>'required',
+                'status' =>'required',
+            ]);
+            if ($validator->fails()){
+                return response()
+                    ->json([
+                        'success' =>false,
+                        'message' =>$validator->errors()->first()
+                    ]);
+            }
+            Order::where('order_number',$request->input('order_number'))
+                ->update([
+                    'status' =>$request->input("status"),
+                    'fleet_id' =>$request->input("fleet_id"),
+                ]);
+            Fleet::where('fleet_id',$request->input('fleet_id'))
+                ->update([
+                    'status'    => 'Loading'
+                ]);
+
+        }catch (Exception $e) {
+
+        }
+    }
+    public function dispatch(Request $request)
+    {
+        try{
+            $validator=Validator::make($request->all(),[
+                'order_number' =>'required',
+                'customer_id' =>'required',
+                'fleet_id' =>'required',
+                'description' =>'required',
+                'status' =>'required',
+            ]);
+            if ($validator->fails()){
+                return response()
+                    ->json([
+                        'success' =>false,
+                        'message' =>$validator->errors()->first()
+                    ]);
+            }
+            Order::where('order_number',$request->input('order_number'))
+                ->update([
+                    'status'    => 'Dispatched'
+                ]);
+            Fleet::where('fleet_id',$request->input('order_number'))
+                ->update([
+                    'status'    => 'On Transit'
+                ]);
+            $user=User::where('customer_id',$request->input('customer_id'))->first();
+            OrderDispatchedNotification($user);
+        }catch (Exception $e) {
+
         }
     }
 }
