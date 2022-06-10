@@ -17,7 +17,6 @@ return new class extends Migration
             $table->id();
             $table->string('order_number');
             $table->foreignId('customer_id')->constrained();
-            $table->foreignId('product_id')->constrained();
             $table->foreignId('fleet_id')->constrained();
             $table->string('description')->nullable();
             $table->enum('status',['Pending','Loading','Dispatched','Delivered']);

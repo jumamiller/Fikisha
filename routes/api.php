@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use \App\Http\Controllers\API\Fleet\FleetController;
 use \App\Http\Controllers\API\Customer\CustomerController;
+use \App\Http\Controllers\API\Auth\AuthController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -15,5 +16,11 @@ use \App\Http\Controllers\API\Customer\CustomerController;
 |
 */
 
-Route::apiResource('fleet', FleetController::class);
-Route::apiResource('customers', CustomerController::class);
+Route::group(['prefix'=>'v1'], function(){
+    Route::group(['prefix'=>'auth'], function(){
+        Route::post('login', [AuthController::class,'login']);
+        Route::post('register', [AuthController::class,'register']);
+    });
+    Route::apiResource('fleet', FleetController::class);
+    Route::apiResource('customers', CustomerController::class);
+});
